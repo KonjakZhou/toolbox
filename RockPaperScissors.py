@@ -40,7 +40,7 @@ class OpponentWinner(Partner):       #永远针对对手上一个,基于对方�
         gesture = self._gestureCalculator(OLG, 1)
         self._strategyQueue.append(gesture)
 
-class Imitator(Partner):    #永远模仿对手上一个,基于对方手势针对两轮
+class Imitator(Partner):    #永远模仿对手上一个,实际相当于基于对方手势针对两轮
     def appendNextGesture(self, OLG):    #opponentLastGesture
         self._strategyQueue.append(OLG)
 
