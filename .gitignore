@@ -10,4 +10,4 @@ build
 *.gzip
 test*
 
-.idea
+.idea/
