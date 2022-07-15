@@ -1,0 +1,13 @@
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
+
+*.pkl
+*.csv
+*.gzip
+test*
+
+.idea
