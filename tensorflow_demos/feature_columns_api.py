@@ -11,9 +11,8 @@ with tf.Session() as sess:
     }
 
     boundaries = [1.5,2.5,3.5,4.5,5.5]
-    department = tf.feature_column.numeric_column('department', dimension=3, dtype=tf.float32)
+    department = tf.feature_column.numeric_column('department', shape=(3,), dtype=tf.float32)
     department = tf.feature_column.bucketized_column(department, boundaries)
-    
     columns = [
         department
     ]
