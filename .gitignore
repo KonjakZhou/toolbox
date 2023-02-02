@@ -9,5 +9,6 @@ build
 *.csv
 *.gzip
 test*
+*.gif
 
 .idea/

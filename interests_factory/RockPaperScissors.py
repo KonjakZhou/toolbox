@@ -1,3 +1,7 @@
+"""
+剪刀石头布
+会不会有一个相对较好的策略呢
+"""
 import random
 import numpy as np
 import json
