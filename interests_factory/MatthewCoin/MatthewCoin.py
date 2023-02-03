@@ -208,7 +208,41 @@ class WorldBase(object):
         self._total_wealth = sum([persion.coins for persion in self._citizen_dict.values()])
         self._population = len(self._citizen_dict)
         return 
-            
+    
+class World1(WorldBase):
+    """
+    游戏不停止，且可以负债
+    平均分配初始财富
+    """
+    def __init__(self, population=1000, avg_wealth=1000):
+        super().__init__(population, avg_wealth)
+        # 分配财富，财富分配规则每个世界可能不同
+        self._distribute_wealth(avg_wealth=avg_wealth)
+
+    def __new__(cls, *args, **kwargs):
+        return object.__new__(cls)
+
+    def _distribute_wealth(self, *args, **kwargs):
+        avg_wealth = kwargs["avg_wealth"]
+        for person in self._citizen_dict.values():
+            person.gain_coins(avg_wealth)
+        return 
+    
+    def run_x_time_particles(self, turn, if_show_bar = False):
+        iterator = range(turn)
+        if if_show_bar:
+            iterator = tqdm(iterator)
+
+        citizen_list = list(self._citizen_dict.values())
+        for _ in iterator:    
+            for persion in citizen_list:
+                persion.loss_coins(1)
+                random.choice(citizen_list).gain_coins(1)
+            self._turn += 1
+        
+        self._history.append((self._turn, copy.deepcopy(self._citizen_dict)))
+        return 
+
 class World2(WorldBase):
     """
     不会负债，如果手中没有硬币，则不会再给出硬币，但可以接收
@@ -244,40 +278,6 @@ class World2(WorldBase):
         
         self._history.append((self._turn, copy.deepcopy(self._citizen_dict)))
         return 
-    
-class World2(WorldBase):
-    """
-    游戏不停止，且可以负债
-    平均分配初始财富
-    """
-    def __init__(self, population=1000, avg_wealth=1000):
-        super().__init__(population, avg_wealth)
-        # 分配财富，财富分配规则每个世界可能不同
-        self._distribute_wealth(avg_wealth=avg_wealth)
-
-    def __new__(cls, *args, **kwargs):
-        return object.__new__(cls)
-
-    def _distribute_wealth(self, *args, **kwargs):
-        avg_wealth = kwargs["avg_wealth"]
-        for person in self._citizen_dict.values():
-            person.gain_coins(avg_wealth)
-        return 
-    
-    def run_x_time_particles(self, turn, if_show_bar = False):
-        iterator = range(turn)
-        if if_show_bar:
-            iterator = tqdm(iterator)
-
-        citizen_list = list(self._citizen_dict.values())
-        for _ in iterator:    
-            for persion in citizen_list:
-                persion.loss_coins(1)
-                random.choice(citizen_list).gain_coins(1)
-            self._turn += 1
-        
-        self._history.append((self._turn, copy.deepcopy(self._citizen_dict)))
-        return 
 
 def io_test(data_list, text = None):
     # 绘制变化图
@@ -295,7 +295,6 @@ def io_test(data_list, text = None):
     # plt.ioff()
 
     plt.show()
-
 
 if __name__ == '__main__':
     world = World1()
