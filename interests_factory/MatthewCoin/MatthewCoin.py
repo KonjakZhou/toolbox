@@ -298,25 +298,28 @@ def io_test(data_list, text = None):
     plt.show()
 
 if __name__ == '__main__':
-    world = World1()
+    world = World2()
 
     bias_ratio = 0.2
 
     last_dist = deque(maxlen=10)
     last_dist.append(-1)
-
+    avg_buffer = deque(maxlen=5)
     while bias_ratio < 0.8:
         world.run_x_time_particles(10000)
         leaderboard, bias_ratio = world.get_wealth_distribute(world.last_snapshot, 200) 
         
-        if bias_ratio <= last_dist[-1]:
+        avg_buffer.append(bias_ratio)
+        avg_5_bias = np.mean(avg_buffer)
+        if  avg_5_bias <= last_dist[0]:
             logging.info("当前是{}年，头部财富已经占据世界财富{:.4f}, 且已经经过10个历史粒度没有更新, 时间已停止".format(world.year, bias_ratio))
             break
+        last_dist.append(avg_5_bias)
         
         if world.year % 10000 == 0:
             logging.info("当前是{}年，头部财富已经占据世界财富{:.4f}...".format(world.year, bias_ratio))
         
-    world.save_history_data("test_world")
+    world.save_history_data("world2")
 
     # world = World1()
     # world.load_history_data("test_world.pkl")

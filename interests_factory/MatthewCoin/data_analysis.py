@@ -7,7 +7,7 @@ from MatthewCoin import Persion, World1
 
 if __name__ == '__main__':
     world = World1()
-    world.load_history_data("World1.pkl")
+    world.load_history_data("world2.pkl")
     print(world.year)
-    # world.save_snapshot_gif("World1")
+    world.save_snapshot_gif("world2")
     
