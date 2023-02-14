@@ -279,6 +279,45 @@ class World2(WorldBase):
         
         self._history.append((self._turn, copy.deepcopy(self._citizen_dict)))
         return 
+    
+class World3(WorldBase):
+    """
+    不会负债，如果手中没有硬币，则不会再给出硬币，但可以接收
+    平均分配初始财富
+    """
+    def __init__(self, population=1000, avg_wealth=1000):
+        super().__init__(population, avg_wealth)
+        # 分配财富，财富分配规则每个世界可能不同
+        self._distribute_wealth(avg_wealth=avg_wealth)
+
+    def __new__(cls, *args, **kwargs):
+        return object.__new__(cls)
+
+    def _distribute_wealth(self, *args, **kwargs):
+        avg_wealth = kwargs["avg_wealth"]
+        for person in self._citizen_dict.values():
+            person.gain_coins(avg_wealth)
+        return 
+    
+    def run_x_time_particles(self, turn, if_show_bar = False):
+        iterator = range(turn)
+        if if_show_bar:
+            iterator = tqdm(iterator)
+
+        citizen_list = list(self._citizen_dict.values())
+        for _ in iterator:    
+            for persion in citizen_list:
+                if persion.life == "dead":
+                    continue
+                persion.loss_coins(1)
+                gain_coin_candidates = [person_enum for person_enum in citizen_list if person_enum.life=="alive"]
+                random.choice(gain_coin_candidates).gain_coins(1)
+                if persion.coins == 0:
+                    persion.life = "dead"
+            self._turn += 1
+        
+        self._history.append((self._turn, copy.deepcopy(self._citizen_dict)))
+        return 
 
 def io_test(data_list, text = None):
     # 绘制变化图
@@ -298,7 +337,7 @@ def io_test(data_list, text = None):
     plt.show()
 
 if __name__ == '__main__':
-    world = World2()
+    world = World3()
 
     bias_ratio = 0.2
 
@@ -306,7 +345,7 @@ if __name__ == '__main__':
     last_dist.append(-1)
     avg_buffer = deque(maxlen=5)
     while bias_ratio < 0.8:
-        world.run_x_time_particles(10000)
+        world.run_x_time_particles(10000, True)
         leaderboard, bias_ratio = world.get_wealth_distribute(world.last_snapshot, 200) 
         
         avg_buffer.append(bias_ratio)
@@ -319,7 +358,7 @@ if __name__ == '__main__':
         if world.year % 10000 == 0:
             logging.info("当前是{}年，头部财富已经占据世界财富{:.4f}...".format(world.year, bias_ratio))
         
-    world.save_history_data("world2")
+    world.save_history_data("world3")
 
     # world = World1()
     # world.load_history_data("test_world.pkl")
