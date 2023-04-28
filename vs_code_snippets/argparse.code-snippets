@@ -21,7 +21,7 @@
 		"body": [
 			"from argparse import ArgumentParser",
 			"def config_args():",
-			"	parser = ArgumentParser(description='house_list_updater')",
+			"	parser = ArgumentParser(description='default')",
 			"	parser.add_argument('--arg_name', default=None, help='here is help')",
 			"	args = parser.parse_args()",
 			"	return args",
