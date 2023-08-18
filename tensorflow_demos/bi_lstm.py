@@ -41,6 +41,6 @@ if __name__ == '__main__':
     input_tf = tf.Variable(input_list, dtype=tf.float32)
     input_length_tf = tf.Variable(input_length)
     _, _, concated_output = bi_lstm(input_embs = input_tf, input_lengths = input_length_tf, lstm_hidden_dim = 32, lstm_layers_num=1)
-    print(concated_output)
+    print(concated_output)   # [BS, SL, DIM*2]
 
     pass
