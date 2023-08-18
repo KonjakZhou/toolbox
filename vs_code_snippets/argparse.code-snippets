@@ -23,6 +23,7 @@
 			"def config_args():",
 			"	parser = ArgumentParser(description='default')",
 			"	parser.add_argument('--arg_name', default=None, help='here is help')",
+			"	parser.add_argument('--full_arg_name', 'short_arg_name', action='store_true', default=False, help'here is help')"
 			"	args = parser.parse_args()",
 			"	return args",
 		]
